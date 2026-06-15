@@ -223,7 +223,7 @@ def generate_forecast(model, df: pd.DataFrame) -> pd.DataFrame:
 
 
 def run(save: bool = True):
-    log.info("═══ XGBoost Model ═══════════════════════")
+    log.info(" XGBoost Model ")
     df = load_features()
 
     model, test_df, y_pred, cv_results = train_eval(df)

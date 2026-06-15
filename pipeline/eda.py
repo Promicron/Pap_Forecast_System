@@ -22,7 +22,7 @@ def run_eda(save_report: bool = True) -> dict:
 
     report = {}
 
-    # ── Overview ────────────────────────────────────
+    #  Overview 
     report["overview"] = {
         "total_transactions": len(txn),
         "total_revenue":      round(txn["revenue"].sum(), 2),
@@ -34,7 +34,7 @@ def run_eda(save_report: bool = True) -> dict:
         "revenue_std":        round(daily["revenue"].std(), 2),
     }
 
-    # ── Revenue by segment ───────────────────────────
+    #  Revenue by segment 
     report["by_segment"] = (
         txn.groupby("segment")["revenue"]
         .agg(total="sum", avg_order="mean", count="count")
@@ -42,7 +42,7 @@ def run_eda(save_report: bool = True) -> dict:
         .to_dict(orient="index")
     )
 
-    # ── Revenue by category ──────────────────────────
+    #  Revenue by category 
     report["by_category"] = (
         txn.groupby("category")["revenue"]
         .agg(total="sum", avg_order="mean", count="count")
@@ -50,7 +50,7 @@ def run_eda(save_report: bool = True) -> dict:
         .to_dict(orient="index")
     )
 
-    # ── Monthly revenue trend ────────────────────────
+    #  Monthly revenue trend 
     monthly = txn.copy()
     monthly["month"] = txn["date"].dt.to_period("M")
     report["monthly_revenue"] = {
@@ -58,7 +58,7 @@ def run_eda(save_report: bool = True) -> dict:
         for k, v in monthly.groupby("month")["revenue"].sum().items()
     }
 
-    # ── Seasonality indicators ───────────────────────
+    #  Seasonality indicators 
     dow_rev = daily.copy()
     dow_rev["dow_name"] = pd.to_datetime(daily["date"]).dt.day_name()
     report["avg_revenue_by_dow"] = (
@@ -73,7 +73,7 @@ def run_eda(save_report: bool = True) -> dict:
         .to_dict()
     )
 
-    # ── Discount analysis ────────────────────────────
+    #  Discount analysis 
     report["discount_analysis"] = {
         "avg_discount_pct":    round(txn["discount_pct"].mean() * 100, 2),
         "pct_transactions_discounted": round((txn["discount_pct"] > 0).mean() * 100, 2),
@@ -81,14 +81,14 @@ def run_eda(save_report: bool = True) -> dict:
         "revenue_with_discount":       round(txn[txn["discount_pct"] > 0]["revenue"].sum(), 2),
     }
 
-    # ── Gross profit margin ──────────────────────────
+    #  Gross profit margin 
     report["profitability"] = {
         "avg_gp_margin_pct":     round(daily["gp_margin"].mean() * 100, 2),
         "total_gross_profit":    round(txn["gross_profit"].sum(), 2),
         "recurring_rev_share":   round(daily["recurring_share"].mean() * 100, 2),
     }
 
-    # ── Top features correlated with revenue ─────────
+    #  Top features correlated with revenue ─────────
     feature_cols = [c for c in daily.columns if c not in ["date","revenue"]]
     numeric_cols = daily[feature_cols].select_dtypes(include="number").columns.tolist()
     correlations = daily[numeric_cols + ["revenue"]].corr()["revenue"].drop("revenue")
@@ -97,7 +97,7 @@ def run_eda(save_report: bool = True) -> dict:
         k: round(float(correlations[k]), 4) for k in top_corr.index
     }
 
-    # ── Outlier summary ──────────────────────────────
+    #  Outlier summary 
     q99 = daily["revenue"].quantile(0.99)
     q01 = daily["revenue"].quantile(0.01)
     report["outliers"] = {
@@ -107,7 +107,7 @@ def run_eda(save_report: bool = True) -> dict:
         "days_below_p01":    int((daily["revenue"] < q01).sum()),
     }
 
-    # ── Print readable summary ────────────────────────
+    #  Print readable summary 
     ov = report["overview"]
     print(f"""
 ╔══════════════════════════════════════════╗

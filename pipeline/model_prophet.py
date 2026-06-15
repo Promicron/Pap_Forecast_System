@@ -195,7 +195,7 @@ def generate_forecast(model: Prophet, df: pd.DataFrame) -> pd.DataFrame:
 
 
 def run(save: bool = True):
-    log.info("═══ Prophet Model ═══════════════════════")
+    log.info(" Prophet Model ")
     df = load_features()
 
     model, holdout_df, cv_results = train_eval(df)

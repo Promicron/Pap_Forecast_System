@@ -45,7 +45,7 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 log = logging.getLogger(__name__)
 
-RAW_PATH = Path("/mnt/user-data/uploads/samplesuperstore.csv")
+RAW_PATH = Path("data/samplesuperstore.csv")
 OUT_DIR  = Path(__file__).parent.parent / "data"
 
 
@@ -166,7 +166,7 @@ def build_transactions(df: pd.DataFrame, customers: pd.DataFrame, products: pd.D
 
 
 def ingest(save: bool = True):
-    log.info("── Superstore ingest ──────────────────────")
+    log.info(" Superstore ingest ")
     raw = load_raw()
 
     log.info("Building customer dimension...")

@@ -56,7 +56,7 @@ def load_holdouts():
 
 
 def run(save: bool = True):
-    log.info("═══ Ensemble + Comparison ════════════════")
+    log.info(" Ensemble + Comparison ")
 
     xgb_fc, proph_fc = load_forecasts()
     xgb_cv, proph_cv = load_cv_results()

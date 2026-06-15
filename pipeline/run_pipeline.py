@@ -29,6 +29,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from clean    import run as run_clean
 from features import run as run_features
+from model_xgboost import run as run_xgboost
+from model_prophet import run as run_prophet
+from model_ensemble import run as run_ensemble
 from eda      import run_eda
 
 USE_SYNTHETIC = "--synthetic" in sys.argv
@@ -57,11 +60,17 @@ def main():
     print("─"*40)
     run_clean(save=True)
 
-    print("\nSTEP 3/4 — Feature engineering")
+    print("\nSTEP 3/5 — Feature engineering")
     print("─"*40)
     run_features(save=True)
 
-    print("\nSTEP 4/4 — EDA summary")
+    print("\nSTEP 4/5 — Train forecasting models")
+    print("─"*40)
+    run_xgboost(save=True)
+    run_prophet(save=True)
+    run_ensemble(save=True)
+
+    print("\nSTEP 5/5 — EDA summary")
     print("─"*40)
     run_eda(save_report=True)
 

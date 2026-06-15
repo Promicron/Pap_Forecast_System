@@ -1,4 +1,6 @@
-"""Ingestion adapter for the Kaggle Superstore Sales dataset.
+"""
+kaggle_ingest.py
+Ingestion adapter for the Kaggle Superstore Sales dataset.
 
 Maps Superstore columns → pipeline schema and writes the three
 dimension/fact tables that clean.py, features.py, and eda.py expect:

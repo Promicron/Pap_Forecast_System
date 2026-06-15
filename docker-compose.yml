@@ -1,0 +1,70 @@
+# docker-compose.yml
+# SalesCast — full local stack
+#
+# Services:
+#   api       FastAPI backend (port 8000)
+#   frontend  React dashboard via Vite dev server (port 5173)
+#
+# Usage:
+#   docker compose up --build
+#   docker compose up api          # backend only
+#   docker compose run --rm api python pipeline/run_pipeline.py
+
+version: "3.9"
+
+services:
+
+  # ── FastAPI backend ─────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: salescast-api:local
+    container_name: salescast_api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount live code for hot-reload during dev (override CMD below)
+      - ./api:/app/api:ro
+      - ./pipeline:/app/pipeline:ro
+      - ./models:/app/models:ro
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=info
+    command: >
+      uvicorn api.main:app
+        --host 0.0.0.0
+        --port 8000
+        --reload
+        --reload-dir /app/api
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  # ── React frontend (Vite) ────────────────────────────────────
+  frontend:
+    image: node:20-alpine
+    container_name: salescast_frontend
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  default:
+    name: salescast_net

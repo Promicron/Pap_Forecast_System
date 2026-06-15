@@ -1,0 +1,24 @@
+# SalesCast — Python dependencies
+# Pin to tested versions for reproducibility
+
+# ── Data pipeline ──────────────────────────────────────────────
+pandas==2.2.3
+numpy==1.26.4
+scikit-learn==1.5.2
+sqlalchemy==2.0.36
+faker==30.3.0
+
+# ── ML models ─────────────────────────────────────────────────
+xgboost==2.1.2
+prophet==1.1.6
+
+# ── API ───────────────────────────────────────────────────────
+fastapi==0.115.4
+uvicorn[standard]==0.32.0
+pydantic==2.9.2
+python-multipart==0.0.12
+httpx==0.27.2          # TestClient dependency
+
+# ── Dev / testing ─────────────────────────────────────────────
+pytest==8.3.3
+pytest-asyncio==0.24.0

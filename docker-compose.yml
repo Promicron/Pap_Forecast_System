@@ -28,7 +28,7 @@ services:
       # Mount live code for hot-reload during dev (override CMD below)
       - ./api:/app/api:ro
       - ./pipeline:/app/pipeline:ro
-      - ./models:/app/models:ro
+      - ./models:/app/models
       - ./data:/app/data
     environment:
       - PYTHONUNBUFFERED=1
@@ -40,8 +40,7 @@ services:
         --reload
         --reload-dir /app/api
     healthcheck:
-      test: ["CMD", "python", "-c",
-             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" ]
       interval: 30s
       timeout: 10s
       retries: 3

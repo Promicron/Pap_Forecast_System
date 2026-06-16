@@ -30,7 +30,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from clean    import run as run_clean
 from features import run as run_features
 from model_xgboost import run as run_xgboost
-from model_prophet import run as run_prophet
+from model_statsforecast import run as run_prophet
 from model_ensemble import run as run_ensemble
 from eda      import run_eda
 

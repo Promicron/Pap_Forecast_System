@@ -13,7 +13,6 @@ import json
 
 import pandas as pd
 from xgboost import XGBRegressor
-from prophet.serialize import model_from_json
 
 log = logging.getLogger(__name__)
 
@@ -25,14 +24,13 @@ class ModelRegistry:
     """Singleton that holds all loaded model artefacts."""
 
     def __init__(self):
-        self.xgb_model:       Optional[XGBRegressor] = None
-        self.prophet_model    = None
-        self.xgb_forecast:    Optional[pd.DataFrame] = None
-        self.prophet_forecast: Optional[pd.DataFrame] = None
+        self.xgb_model:         Optional[XGBRegressor] = None
+        self.xgb_forecast:      Optional[pd.DataFrame] = None
+        self.prophet_forecast:  Optional[pd.DataFrame] = None
         self.ensemble_forecast: Optional[pd.DataFrame] = None
-        self.model_comparison: Optional[dict] = None
-        self.daily_features:  Optional[pd.DataFrame] = None
-        self.transactions:    Optional[pd.DataFrame] = None
+        self.model_comparison:  Optional[dict] = None
+        self.daily_features:    Optional[pd.DataFrame] = None
+        self.transactions:      Optional[pd.DataFrame] = None
         self._loaded: list[str] = []
 
     def load(self):
@@ -47,14 +45,8 @@ class ModelRegistry:
         except Exception as e:
             log.error(f"  ✗ XGBoost load failed: {e}")
 
-        # Prophet
-        try:
-            with open(MODELS_DIR / "prophet_model.json") as f:
-                self.prophet_model = model_from_json(f.read())
-            self._loaded.append("prophet")
-            log.info("  ✓ Prophet model loaded")
-        except Exception as e:
-            log.error(f"  ✗ Prophet load failed: {e}")
+        # StatsForecast (MSTL+AutoARIMA) — forecast is loaded as CSV below;
+        # the model object is not persisted between pipeline runs.
 
         # Forecast CSVs
         try:

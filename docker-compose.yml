@@ -19,7 +19,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: runtime
     image: salescast-api:local
     container_name: salescast_api
     ports:

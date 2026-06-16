@@ -10,7 +10,7 @@ faker==30.3.0
 
 # ── ML models ─────────────────────────────────────────────────
 xgboost==2.1.2
-prophet==1.1.6
+statsforecast==1.7.8      # MSTL + AutoARIMA, pure Python — no Stan/CmdStan
 
 # ── API ───────────────────────────────────────────────────────
 fastapi==0.115.4

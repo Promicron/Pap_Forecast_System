@@ -1,36 +1,22 @@
 # ── SalesCast API — Dockerfile ───────────────────────────────
-# Multi-stage build: lean production image (~700 MB with Prophet)
+# Single-stage build. Prophet + CmdStan removed; StatsForecast is
+# pure Python so no C++ toolchain or Stan compilation is needed.
 #
 # Build:  docker build -t salescast-api .
 # Run:    docker run -p 8000:8000 salescast-api
 
-# ── Stage 1: dependency builder ──────────────────────────────
-FROM python:3.12-slim AS builder
-
-WORKDIR /build
-
-# System deps needed to compile Prophet / pystan
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential gcc g++ cmake libgomp1 \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt .
-RUN pip install --upgrade pip \
-    && pip install --prefix=/install --no-cache-dir -r requirements.txt
-
-
-# ── Stage 2: runtime ─────────────────────────────────────────
-FROM python:3.12-slim AS runtime
+FROM python:3.12-slim
 
 WORKDIR /app
 
-# Runtime-only system libs
+# libgomp1 is still needed by XGBoost for OpenMP multi-threading
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy installed packages from builder
-COPY --from=builder /install /usr/local
+COPY requirements.txt .
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY api/       ./api/

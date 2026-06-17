@@ -1,0 +1,41 @@
+{
+  "models": {
+    "xgboost": {
+      "holdout_rmse": 2692.78,
+      "holdout_mae": 1929.47,
+      "holdout_mape": 450.16,
+      "cv_rmse_mean": 1786.52,
+      "cv_rmse_std": 334.39,
+      "cv_mae_mean": 1314.05,
+      "weight": 0.5286,
+      "top_features": [
+        "month",
+        "week_of_year",
+        "avg_discount",
+        "days_to_quarter_end",
+        "ewm_14d",
+        "roll_mean_14d",
+        "is_weekend",
+        "roll_mean_90d",
+        "lag_7d",
+        "lag_56d"
+      ]
+    },
+    "prophet": {
+      "holdout_rmse": 3019.52,
+      "holdout_mae": 2322.89,
+      "holdout_mape": 701.09,
+      "cv_rmse_mean": 2137.25,
+      "cv_mae_mean": 1492.2,
+      "weight": 0.4714
+    },
+    "ensemble": {
+      "holdout_rmse": 2760.4,
+      "holdout_mae": 2065.33,
+      "holdout_mape": 570.87,
+      "strategy": "inverse-RMSE weighted average"
+    }
+  },
+  "winner": "xgboost",
+  "forecast_horizon_days": 90
+}
